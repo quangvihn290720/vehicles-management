@@ -33,8 +33,9 @@ Develop a basic vehicle management system using the Java Spring Boot framework. 
 
 ## API Reference
 
-Link document in POSTMAN: https://documenter.getpostman.com/view/15417658/2sA3kbfd6H
-The backend localhost service will start at http://localhost:8080.
+* Link document in POSTMAN: https://documenter.getpostman.com/view/15417658/2sA3kbfd6H
+
+* The backend localhost service will start at http://localhost:8080.
 
 #### Create new user
 

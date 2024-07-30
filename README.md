@@ -1,7 +1,7 @@
 
 # Vehicle Management System
 
-Develop a basic vehicle management system using the Java Spring Boot framework. The system should allow users to register, authenticate, and manage vehicles with role-based access.
+Develop a basic vehicle management system using the Java Spring Boot framework. The system should allow users to register, authenticate (JWT), and manage vehicles with role-based access.
 
 
 ## Features
@@ -10,10 +10,10 @@ Develop a basic vehicle management system using the Java Spring Boot framework. 
 - Login: Endpoint for user authentication.
 - Add Vehicle: (Admin only) Endpoint to add a new vehicle.
 - View Vehicles: Endpoint to retrieve all vehicles, including associated maintenance records (Admin) or user-specific vehicles and their records.
-- Update Vehicle: Endpoint to update vehicle details.
-- Add Maintenance Record: Endpoint to add maintenance records for vehicles.
-- View Maintenance Records: Endpoint to view maintenance records, linked with vehicle information.
-- Update Maintenance Record: Endpoint to update maintenance records.
+- Update Vehicle: Endpoint to update vehicle details, restricted to the vehicle owner or Admin.
+- Add Maintenance Record: Endpoint to add maintenance records for vehicles, restricted to the record owner or Admin.
+- View Maintenance Records: Endpoint to view maintenance records, linked with vehicle information, restricted to the record owner or Admin.
+- Update Maintenance Record: Endpoint to update maintenance records, restricted to the record owner or Admin.
 
 ## Tech stack
 * Build tool: maven >= 3.9.5
@@ -33,29 +33,33 @@ Develop a basic vehicle management system using the Java Spring Boot framework. 
 
 ## API Reference
 
+The backend localhost service will start at http://localhost:8080.
+
 #### Create new user
 
 ```http
   POST /api/v1/users/registration
 ```
 
-| Parameter  | Type     | Description                |
-| :--------  | :------- | :------------------------- |
-| `username` | `string` |               |
-| `password` | `string` |               |
-| `firstName`| `string` |               |
-| `lastName` | `string` |               |
+| Parameter  | Type     | Description |
+| :--------  | :------- |:------------|
+| `username` | `string` |             |
+| `password` | `string` |             |
+| `firstName`| `string` |             |
+| `lastName` | `string` |             |
 
 #### Login
 
 ```http
   POST /api/v1/auth/log-in
 ```
+    user    : admin
+    password: admin
 
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `username`| `string` |                      |
-| `password`| `string` |                      |
+| Parameter | Type     | Description |
+| :-------- | :------- |:------------|
+| `username`| `string` |             |
+| `password`| `string` |             |
 
 ####  Add Vehicle: (Admin role only)
 
@@ -63,13 +67,13 @@ Develop a basic vehicle management system using the Java Spring Boot framework. 
   POST /api/v1/vehicles
 ```
 
-| Parameter  | Type     | Description                |
-| :--------  | :------- | :------------------------- |
-| `make`     | `string` |               |
-| `model`    | `string` |               |
-| `year`     | `string` |               |
-| `type`     | `string` |               |
-| `users.id` | `string` |               |
+| Parameter | Type        | Description |
+|:----------|:------------|:------------|
+| `make`    | `string`    |             |
+| `model`   | `string`    |             |
+| `year`    | `LocalDate` |             |
+| `type`    | `string`    |             |
+| `users`   | `Object`    |             |
 
 ####  View All Vehicle: (Admin role only)
 
@@ -86,9 +90,9 @@ Develop a basic vehicle management system using the Java Spring Boot framework. 
   GET /api/v1/vehicles/{id}
 ```
 
-| Parameter  | Type     | Description                |
-| :--------  | :------- | :------------------------- |
-| `id`     | `string` |               |
+| Parameter | Type     | Description |
+|:----------|:---------|:------------|
+| `id`      | `string` |             |
 
 ####  UPDATE Vehicle
 
@@ -96,13 +100,13 @@ Develop a basic vehicle management system using the Java Spring Boot framework. 
   PUT /api/v1/vehicles
 ```
 
-| Parameter  | Type     | Description                |
-| :--------  | :------- | :------------------------- |
-| `make`     | `string` |               |
-| `model`    | `string` |               |
-| `year`     | `string` |               |
-| `type`     | `string` |               |
-| `users.id` | `string` |               |
+| Parameter | Type         | Description |
+|:----------|:-------------|:------------|
+| `make`    | `string`     |             |
+| `model`   | `string`     |             |
+| `year`    | `LocalDate`  |             |
+| `type`    | `string`     |             |
+| `users`   | `Object`     |             |
 
 ####  Add Maintenance Record
 
@@ -111,11 +115,11 @@ Develop a basic vehicle management system using the Java Spring Boot framework. 
 ```
 
 | Parameter     | Type        | Description                |
-| :------------ | :-------    | :------------------------- |
+|:--------------| :-------    | :------------------------- |
 | `description` | `string`    |                            |
 | `serviceDate` | `LocalDate` |                            |
 | `cost`        | `string`    |                            |
-| `vehicles.id` | `string`    |                            |
+| `vehicles`    | `Object`    |                            |
 
 ####  View All Maintenance Record: (Admin role only)
 
@@ -143,8 +147,8 @@ Develop a basic vehicle management system using the Java Spring Boot framework. 
 ```
 
 | Parameter     | Type        | Description                |
-| :------------ | :-------    | :------------------------- |
+|:--------------| :-------    | :------------------------- |
 | `description` | `string`    |                            |
 | `serviceDate` | `LocalDate` |                            |
 | `cost`        | `string`    |                            |
-| `vehicles.id` | `string`    |                            |
+| `vehicles`    | `Object`    |                            |

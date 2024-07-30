@@ -43,6 +43,11 @@ Develop a basic vehicle management system using the Java Spring Boot framework. 
 
 * The backend localhost service will start at http://localhost:8080.
 
+* Please note: All operations with the API must be logged and must access the token with OAuth 2.0 authorization.
+* For the ADMIN role, please use the account below:
+* `username: admin`
+* `password: admin`
+
 #### Create new user
 
 ```http
@@ -61,8 +66,6 @@ Develop a basic vehicle management system using the Java Spring Boot framework. 
 ```http
   POST /api/v1/auth/log-in
 ```
-    user    : admin
-    password: admin
 
 | Parameter | Type     | Description |
 | :-------- | :------- |:------------|

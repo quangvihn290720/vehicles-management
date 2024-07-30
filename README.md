@@ -4,7 +4,7 @@
 Develop a basic vehicle management system using the Java Spring Boot framework. The system should allow users to register, authenticate (JWT), and manage vehicles with role-based access.
 
 
-## Features
+## Main Features
 
 - User Registration: Endpoint for user sign-up.
 - Login: Endpoint for user authentication.
@@ -15,6 +15,11 @@ Develop a basic vehicle management system using the Java Spring Boot framework. 
 - View Maintenance Records: Endpoint to view maintenance records, linked with vehicle information, restricted to the record owner or Admin.
 - Update Maintenance Record: Endpoint to update maintenance records, restricted to the record owner or Admin.
 
+## Other Features
+
+- Create Role/Permission
+- Get All Role/Permission (Only Admin) 
+
 ## Tech stack
 * Build tool: maven >= 3.9.5
 * Java: 21
@@ -24,6 +29,7 @@ Develop a basic vehicle management system using the Java Spring Boot framework. 
 ## Prerequisites
 * Java SDK 21
 * A MySQL server
+* Create a database schema named 'vehicles-management'
 
 ## Start application
 `mvn spring-boot:run`
@@ -43,12 +49,12 @@ Develop a basic vehicle management system using the Java Spring Boot framework. 
   POST /api/v1/users/registration
 ```
 
-| Parameter  | Type     | Description |
-| :--------  | :------- |:------------|
-| `username` | `string` |             |
-| `password` | `string` |             |
-| `firstName`| `string` |             |
-| `lastName` | `string` |             |
+| Parameter  | Type     | Description           |
+| :--------  | :------- |:----------------------|
+| `username` | `string` | At least 6 characters |
+| `password` | `string` | At least 6 characters |
+| `firstName`| `string` |                       |
+| `lastName` | `string` |                       |
 
 #### Login
 
@@ -136,6 +142,16 @@ Develop a basic vehicle management system using the Java Spring Boot framework. 
 
 ```http
   GET /api/v1/maintenance/{id}
+```
+
+| Parameter  | Type     | Description                |
+| :--------  | :------- | :------------------------- |
+| `id`       | `string` |                            |
+
+####  Get Maintenance By Vehicle Id
+
+```http
+  GET /api/v1/maintenance/vehicles/{id}
 ```
 
 | Parameter  | Type     | Description                |

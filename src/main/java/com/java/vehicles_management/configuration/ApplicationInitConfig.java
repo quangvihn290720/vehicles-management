@@ -1,6 +1,5 @@
 package com.java.vehicles_management.configuration;
 
-import com.java.vehicles_management.enums.Role;
 import com.java.vehicles_management.entity.Users;
 import com.java.vehicles_management.repository.UserRepository;
 import lombok.AccessLevel;
@@ -12,8 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.HashSet;
-
+@SuppressWarnings("ALL")
 @Configuration
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)

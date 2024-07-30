@@ -1,5 +1,6 @@
 package com.java.vehicles_management.service;
 
+import com.java.vehicles_management.constant.VMConstant;
 import com.java.vehicles_management.dto.request.MaintenanceRecordCreationRequest;
 import com.java.vehicles_management.dto.request.MaintenanceRecordUpdateRequest;
 import com.java.vehicles_management.dto.response.MaintenanceRecordResponse;
@@ -14,8 +15,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.JavaScriptUtils;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -35,10 +39,17 @@ public class MaintenanceRecordService {
     }
 
     public MaintenanceRecordResponse updateMaintenanceRecord(String recordId, MaintenanceRecordUpdateRequest request){
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
         MaintenanceRecords maintenanceRecord = maintenanceRecordRepository.findById(recordId)
                 .orElseThrow(() -> new AppException(ErrorCode.MAINTENANCE_RECORD_NOT_EXISTED));
-        maintenanceRecordMapper.updateMaintenanceRecord(maintenanceRecord, request);
-        return maintenanceRecordMapper.toMaintenanceRecordResponse(maintenanceRecordRepository.save(maintenanceRecord));
+
+        boolean isAdmin = VMConstant.ADMIN.equalsIgnoreCase(authentication.getName());
+        boolean isOwn   = maintenanceRecord.getVehicles().getId().equalsIgnoreCase(request.getVehicles().getId());
+        if (isOwn || isAdmin) {
+            maintenanceRecordMapper.updateMaintenanceRecord(maintenanceRecord, request);
+            return maintenanceRecordMapper.toMaintenanceRecordResponse(maintenanceRecordRepository.save(maintenanceRecord));
+        }
+        throw new AppException(ErrorCode.UNAUTHORIZED_UPDATE);
     }
 
     public MaintenanceRecordResponse getMaintenanceRecord(String maintenanceRecordId){
@@ -50,6 +61,22 @@ public class MaintenanceRecordService {
     public List<MaintenanceRecordResponse> getMaintenanceRecords() {
         return maintenanceRecordRepository.findAll().stream()
                 .map(maintenanceRecordMapper::toMaintenanceRecordResponse).toList();
+    }
+
+    public List<MaintenanceRecordResponse> getAllMaintenanceRecordsByVehiclesId(String vehicleId) {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        List<MaintenanceRecordResponse> maintenanceRecordResponses = maintenanceRecordRepository
+                .findAll().stream().filter(rs->vehicleId.equalsIgnoreCase(rs.getVehicles().getId()))
+                .map(maintenanceRecordMapper::toMaintenanceRecordResponse).toList();
+
+        boolean isAdmin = VMConstant.ADMIN.equalsIgnoreCase(authentication.getName());
+        boolean isEmpty = maintenanceRecordResponses.isEmpty();
+
+        if (isAdmin || !isEmpty) {
+            return maintenanceRecordResponses;
+        }
+        throw new AppException(ErrorCode.UNAUTHORIZED_VIEW);
     }
 
 }

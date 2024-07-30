@@ -6,12 +6,11 @@ import com.java.vehicles_management.dto.request.UserCreationRequest;
 import com.java.vehicles_management.dto.request.UserUpdateRequest;
 import com.java.vehicles_management.dto.response.UserResponse;
 import com.java.vehicles_management.service.UserService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +25,7 @@ public class UserController {
     UserService userService;
 
     @PostMapping("/registration")
-    ApiResponse<UserResponse> createUser(@RequestBody UserCreationRequest request){
+    ApiResponse<UserResponse> createUser(@Valid @RequestBody UserCreationRequest request){
         return ApiResponse.<UserResponse>builder()
                 .result(userService.createRequest(request)).build();
     }

@@ -34,6 +34,13 @@ public class MaintenanceRecordController {
                 .build();
     }
 
+    @GetMapping("/vehicles/{vehicleId}")
+    ApiResponse<List<MaintenanceRecordResponse>> getMaintenanceRecordsByVehicleId(@PathVariable("vehicleId") String vehicleId){
+        return ApiResponse.<List<MaintenanceRecordResponse>>builder()
+                .result(maintenanceRecordService.getAllMaintenanceRecordsByVehiclesId(vehicleId))
+                .build();
+    }
+
     @GetMapping("/{recordId}")
     ApiResponse<MaintenanceRecordResponse> getMaintenanceRecord(@PathVariable("recordId") String recordId){
         return ApiResponse.<MaintenanceRecordResponse>builder()

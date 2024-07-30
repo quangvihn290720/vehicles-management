@@ -1,5 +1,6 @@
 package com.java.vehicles_management.service;
 
+import com.java.vehicles_management.constant.VMConstant;
 import com.java.vehicles_management.dto.request.VehicleCreationRequest;
 import com.java.vehicles_management.dto.request.VehicleUpdateRequest;
 import com.java.vehicles_management.dto.response.UserResponse;
@@ -30,11 +31,11 @@ import java.util.Objects;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class VehicleService {
 
+
     VehicleRepository vehicleRepository;
     UserRepository userRepository;
     VehicleMapper vehicleMapper;
 
-    @PreAuthorize("hasRole('ADMIN')")
     public VehicleResponse createVehicle(VehicleCreationRequest request){
         if (vehicleRepository.existsByModel(request.getModel())) {
             throw new AppException(ErrorCode.VEHICLE_EXISTED);
@@ -49,10 +50,16 @@ public class VehicleService {
     public VehicleResponse updateVehicle(String vehicleId, VehicleUpdateRequest request){
         Vehicles vehicle = vehicleRepository.findById(vehicleId)
                 .orElseThrow(() -> new AppException(ErrorCode.VEHICLE_NOT_EXISTED));
-        var user = userRepository.findById(request.getUsers().getId()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-        vehicleMapper.updateVehicle(vehicle, request);
-        vehicle.setUsers(user);
-        return vehicleMapper.toVehicleResponse(vehicleRepository.save(vehicle));
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = VMConstant.ADMIN.equalsIgnoreCase(authentication.getName());
+        boolean isOwn   = vehicle.getUsers().getId().equalsIgnoreCase(request.getUsers().getId());
+        if (isOwn || isAdmin) {
+            var user = userRepository.findById(request.getUsers().getId()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+            vehicleMapper.updateVehicle(vehicle, request);
+            vehicle.setUsers(user);
+            return vehicleMapper.toVehicleResponse(vehicleRepository.save(vehicle));
+        }
+        throw new AppException(ErrorCode.UNAUTHORIZED_UPDATE);
     }
 
     public VehicleResponse getVehicle(String vehicleId){

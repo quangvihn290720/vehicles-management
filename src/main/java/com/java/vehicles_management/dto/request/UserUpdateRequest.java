@@ -1,11 +1,9 @@
 package com.java.vehicles_management.dto.request;
 
-import com.java.vehicles_management.entity.Role;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
-import java.util.Set;
 
 @Data
 @NoArgsConstructor

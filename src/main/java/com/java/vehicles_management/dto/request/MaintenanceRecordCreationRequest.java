@@ -1,6 +1,5 @@
 package com.java.vehicles_management.dto.request;
 
-import com.java.vehicles_management.entity.Users;
 import com.java.vehicles_management.entity.Vehicles;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
